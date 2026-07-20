@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "start": "node src/index.js",
     "deploy": "node src/deploy-commands.js",
     "setup-server": "node src/setup-server.js",
     "bot": "node src/bot.js",
