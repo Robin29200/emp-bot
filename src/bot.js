@@ -1,8 +1,19 @@
 import { Client, GatewayIntentBits, EmbedBuilder } from "discord.js";
 import "dotenv/config";
+import http from "http";
 import { Members, Sanctions, Planning, Absences, Activity } from "./db.js";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] });
+
+// Petit serveur HTTP factice : sert uniquement à faire passer ce bot pour un
+// "Web Service" aux yeux de Render (dont le plan gratuit ne propose pas les
+// Background Workers). Un service de ping externe (ex: UptimeRobot) appelle
+// cette URL toutes les 5 minutes pour empêcher le service de s'endormir.
+const PORT = process.env.PORT || 3000;
+http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end(client.isReady() ? "EMP bot en ligne" : "EMP bot en cours de connexion...");
+}).listen(PORT, () => console.log(`Ping keep-alive disponible sur le port ${PORT}`));
 
 const GOLD = 0xc9a227;
 const branchLabel = (v) => ({ "1rpima": "1er RPIMa", "13rdp": "13e RDP", "3rpima": "3e RPIMa" }[v] ?? v);
